@@ -1,7 +1,18 @@
-<html>
+{% extends "base.html" %}
+
+{% block header %}
+    <title>SmartNotes!</title>
+{% endblock %}
+
+{% block content %}
+    <h1>Welcome to SmartNotes!</h1>
+    <p>Today is {{today}}</p>
+{% endblock %}
+
+<!-- <html>
     <header><title>SmartNotes!</title></header>
     <body>
         <h1>Welcome to SmartNotes!</h1>
         <p>Today is {{today}}</p>
     </body>
-</html>
+</html> -->
