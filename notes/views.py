@@ -3,6 +3,7 @@ from django.http import Http404, HttpResponseRedirect
 from django.urls import reverse
 from django.views.generic import ListView, DetailView, CreateView, UpdateView
 from django.views.generic.edit import DeleteView
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .forms import NotesForm
 from .models import Notes
@@ -30,10 +31,20 @@ class NotesCreateView(CreateView):
     success_url = '/smart/notes'
     form_class = NotesForm
 
-class NotesListView(ListView):
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        self.object.user = self.request.user
+        self.object.save()
+        return HttpResponseRedirect(self.get_success_url())
+
+class NotesListView(LoginRequiredMixin, ListView):
     model = Notes
     context_object_name = "notes"
     template_name = "notes/notes_list.html"
+    login_url = '/admin'
+
+    def get_queryset(self):
+        return self.request.user.notes.all()
 
 class NotesDetailView(DetailView):
     model = Notes
